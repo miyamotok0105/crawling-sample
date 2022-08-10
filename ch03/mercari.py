@@ -49,22 +49,14 @@ def get_item_info(driver):
     now = datetime.datetime.now()
     result.datetime = now.strftime('%y/%m/%d %H:%M:%S')    
     # title
-    title_element = driver.find_element(By.CSS_SELECTOR, '#item-info > section:nth-child(1) > div.mer-spacing-b-12 > mer-heading')
+    title_element = driver.find_element(By.CSS_SELECTOR, '#item_h1 > span')
     result.title = title_element.text
     # price
-    price_element = driver.find_element(By.CSS_SELECTOR, "#item-info > section:nth-child(1) > section:nth-child(2) > div > mer-price")
+    price_element = driver.find_element(By.CSS_SELECTOR, "#abtest_display_pc")
     result.price = price_element.text
     # description
-    description_element = driver.find_element(By.CSS_SELECTOR, "#item-info > section:nth-child(2) > mer-show-more > mer-text")
+    description_element = driver.find_element(By.CSS_SELECTOR, "#item_maincol > div.item_main_tabcontent.js-itemdetail-tabcontent > div.item_main_tabcontent_item.is-itemdetail-tabcontent-active > div:nth-child(1) > div > p")
     result.description = description_element.text
-    # sip cost
-    postage_sections = driver.find_element(By.CSS_SELECTOR, "#item-info > section.layout__StyledSection-sc-1lyi7xi-7.kdAFPN > div > mer-display-row:nth-child(4) > span:nth-child(2)")
-    result.postage = postage_sections.text
-    # images 
-    images_section= driver.find_elements(By.CLASS_NAME, "sticky-inner-wrapper")[0]
-    image_tags = images_section.find_elements(By.TAG_NAME, "mer-item-thumbnail")
-    srcs = list(set([i.get_attribute("src") for i in image_tags]))
-    result.image_urls.extend(srcs)
     
     return result
 
@@ -105,4 +97,4 @@ if __name__=="__main__":
         logger.error(e)       
     finally:
         driver.quit()
-        logger.info('end crawring')       
+        logger.info('end crawring') 

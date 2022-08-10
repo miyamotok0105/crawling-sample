@@ -9,16 +9,37 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 class Mercari_serch_option:
-    base_url = None
-    keyword = None
-    order_by = None
-    category = None
-    sub_category_1 = None
-    sub_category_2 = list()
-    max_price = None
-    min_price = None
-    condition = None
-    sales_status= None
+    """
+    """
+    def __init__(self, base_url,
+                 keyword,
+                 order_by = None,
+                 category = None,
+                 sub_category_1 = None,
+                 sub_category_2 = list(),
+                 max_price = None,
+                 min_price = None,
+                 condition = None,
+                 sales_status= None):
+    def convert_keyword(self):
+        
+    self.base_url = base_url
+    self.keyword = keyword.replace(" ", "%20").replace("　", "%20")
+    self.order_by = None
+    self.category = None
+    self.sub_category_1 = None
+    self.sub_category_2 = list()
+    self.max_price = None
+    self.min_price = None
+    self.condition = None
+    self.sales_status= None
+
+    sort=created_time&order=desc # 新しい順
+    sort=score # おすすめ
+    order=asc&sort=price # 安い順
+    sort=price&order=desc # 高い順
+    order=desc&sort=num_likes
+
 
 class Mercari_item_info:
     id = None
