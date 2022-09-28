@@ -7,30 +7,33 @@ import pandas as pd
 
 CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
 CSV_NAME = "tmp.csv"
-ARTICLE_DATA_DIR = "prtimes"
+ARTICLE_DATA_DIR = "prtimes_serch"
+SLEEP_TIME = 3
+PAGE_NUM = 10
 
 if __name__=="__main__":
     try:
         chrome_service = fs.Service(executable_path=CHROMEDRIVER)
         driver = webdriver.Chrome(service=chrome_service)
-        
+        base_url = f"https://prtimes.jp/main/action.php?run=html&page=searchkey&search_word=%E8%AA%BF%E9%81%94"
+        driver.get(base_url)
+        time.sleep(SLEEP_TIME)
+
         if not os.path.exists(ARTICLE_DATA_DIR):
             os.makedirs(ARTICLE_DATA_DIR)        
 
+        for i_pagenum in range(PAGE_NUM-1):
+            button_element = driver.find_element(By.CSS_SELECTOR, ".list-article__more-link.js-list-article-more-button.active")
+            button_element.click()
+            time.sleep(SLEEP_TIME)
 
-        page_urls = list()
-        for i_pagenum in range(1,6):
-            time.sleep(10)
-            base_url = f"https://prtimes.jp/main/html/index/pagenum/{i_pagenum}"
-            driver.get(base_url)
-            article_urls = [i.get_attribute("href") for i in driver.find_elements(By.CLASS_NAME, "list-article__link")]
-            page_urls.extend(article_urls)
+        page_urls = [i.get_attribute("href") for i in driver.find_elements(By.CLASS_NAME, "list-article__link")]
 
         results = list()
         for i_url in page_urls:
             row_result = dict()
             driver.get(i_url)
-            time.sleep(5)
+            time.sleep(SLEEP_TIME)
             
             row_result["id"] = os.path.splitext(i_url.split("/")[-1])[0]
             row_result["url"] = i_url
@@ -45,8 +48,9 @@ if __name__=="__main__":
                 main_text = driver.find_element(By.CLASS_NAME, "rich-text").text
                 f.write(main_text)
             
+            print(row_result)
     finally:
         driver.quit()
 
     df = pd.DataFrame(results)
-    df.to_csv("tmp.csv")
+    df.to_csv(CSV_NAME)
