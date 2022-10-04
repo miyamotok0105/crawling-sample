@@ -7,6 +7,9 @@ import pandas as pd
 SLEEP_TIME = 5
 SCROLL_NUM = 5
 CSV_NAME = "tiktok.csv"
+
+
+
 if __name__=="__main__":
     try:
         CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
@@ -14,11 +17,11 @@ if __name__=="__main__":
         
         chrome_service = fs.Service(executable_path=CHROMEDRIVER)
         driver = webdriver.Chrome(service=chrome_service)
-        driver.get(base_url)
-        
+        driver.get(base_url)        
         time.sleep(SLEEP_TIME)
 
-        for i in range(SCROLL_NUM): 
+        
+        for _ in range(SCROLL_NUM): 
             time.sleep(SLEEP_TIME)
             driver.execute_script("window.scrollBy(0, 6000);")
 

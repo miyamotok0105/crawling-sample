@@ -41,7 +41,6 @@ def get_info(driver):
     return result
 
 def get_detail_info(driver):
-    # 案件概要
     table_data = driver.find_elements(By.CSS_SELECTOR, ".list2column.flex")[0]
     li_elements = table_data.find_elements(By.TAG_NAME, "li")
     keys = [i.text for i in li_elements[::2]]

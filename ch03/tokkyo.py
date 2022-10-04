@@ -1,16 +1,16 @@
+import os
 import time
 import requests
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
-# from PyPDF2 import PdfFileMerger
-from selenium.webdriver.common.action_chains import ActionChains
+from PyPDF2 import PdfFileMerger
 
-SLEEP_TIME = 5
+SLEEP_TIME = 6
 CSV_NAME = "insta_ranking.csv"
 SEARCH_WORD = "栽培　トマト"
-DATA_DIR = ""
+DATA_DIR = "tokkyo"
 
 def scroll_all(driver):
     pre_html = None
@@ -37,9 +37,15 @@ def download_pdf(dir, url):
     with open(file_path ,'wb') as f:
         f.write(content_data)
 
+def sort_pdf(pdf_paths):
+    file_name = [os.path.splitext(os.path.basename(i))[0] for i in pdf_paths]
+    file_num = [int(i.split("-")[-1]) for i in file_name]
+    path_dict = {i_num:i_path for i_num, i_path in zip(file_num, pdf_paths)}
+    return [i[1] for i in sorted(path_dict.items(), key=lambda x:x[0])]
+
 def binnd_pdf(dir, name):
     file_names = os.listdir(dir)
-    file_paths = [os.path.join(dir,i) for i in file_names]
+    file_paths = sort_pdf([os.path.join(dir,i) for i in file_names if ".pdf" in i])
 
     pdf_file_merger = PdfFileMerger()
     for i_path in file_paths:
@@ -61,44 +67,45 @@ if __name__ == "__main__":
 
         driver.find_element(By.ID, "s01_srchCondtn_txtSimpleSearch").send_keys(SEARCH_WORD)
         driver.find_element(By.ID, "s01_srchBtn_btnSearch").click()
-        time.sleep(SLEEP_TIME*3)
-
+        time.sleep(SLEEP_TIME)
 
         scroll_all(driver)
 
         a_elements = get_link_element(driver)
-        input(f"stop {len(a_elements)}")
-        
 
-        for i_element in a_elements: # 特許ごと
+        for i_element in a_elements:
             i_element.click()
             time.sleep(SLEEP_TIME)
             driver.switch_to.window(driver.window_handles[1])
-            driver.close()
+
+            patent_id = driver.find_element(By.TAG_NAME, "h2").text
+            pdf_label_element = driver.find_element(By.ID, "rdoTxtPdfView_1")
+            pdf_label_element.click()
             time.sleep(SLEEP_TIME)
 
-            # get id
-            patent_id = driver.find_element(By.TAG_NAME, "h2").text
-            # click pdf radio button
-            driver.find_element(By.ID, "rdoTxtPdfView_1-input")
-
-            # 
-
-            # get pdf page num
-            # generate pdf url 
-            pdf_url = [i for i in range(1, pdf_page_num)]
+            pdf_page_num = int(driver.find_element(By.ID, 'p02_main_lblTotalPageCount').text)
+            pdf_urls = list()
+            for i_num in range(1, pdf_page_num+1):
+                driver.find_element(By.ID, "p02_main_txtPage").clear()
+                driver.find_element(By.ID, "p02_main_txtPage").send_keys(i_num)
+                driver.find_element(By.ID, "p02_main_btnDisplay").click()
+                time.sleep(SLEEP_TIME)
+                pdf_urls.append(driver.find_element(By.ID, "p0201_pdfObj").get_attribute("src"))
 
             patent_dir = os.path.join(DATA_DIR, patent_id)
             if not os.path.exists(patent_dir):
                 os.makedirs(patent_dir)
             
-            for i_url in pdf_url:
+            for i_url in pdf_urls:
+                print(i_url)
                 download_pdf(patent_dir, i_url)
+                time.sleep(SLEEP_TIME)
             
-            # bind pdf
             pdf_name = f"{patent_id}.pdf"
             binnd_pdf(patent_dir, pdf_name)
-            result.append(get_user_info(driver))
+
+            driver.close()
+            driver.switch_to.window(driver.window_handles[0])
 
         pd.DataFrame.to_csv(CSV_NAME)
 
