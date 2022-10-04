@@ -20,15 +20,8 @@ def get_item_urls(driver):
 
 def get_item_info(driver):
     result = dict()
-
     result["title"] = driver.find_element(By.CLASS_NAME, "ProductTitle__text").text
     result["price"] = driver.find_elements(By.CLASS_NAME, "Price__value")[0].text
-
-    # # prompt_decision_price
-    # if len(driver.find_elements(By.CLASS_NAME, "Price__value")) == 2:
-    #     element = driver.find_elements(By.CLASS_NAME, "Price__value")[1]
-    #     result.prompt_decision_price = element.text
-    
     result["postage"] = driver.find_element(By.CLASS_NAME, "Price__postageValue").text
     result["bid_number"] = driver.find_elements(By.CLASS_NAME, "Count__number")[0].text.rsplit('\n', 1)[0].replace('\n', ' ')
     result["time_left"] = driver.find_elements(By.CLASS_NAME, "Count__number")[1].text.rsplit('\n', 1)[0].replace('\n', ' ')
@@ -37,41 +30,6 @@ def get_item_info(driver):
     dd_elements = productdetail_elements.find_elements(By.TAG_NAME, "dd")
     for i_dt, i_dd in zip(dt_elements, dd_elements):
         result[i_dt.text] = i_dd.text
-
-    # l_element = element.find_element(By.CLASS_NAME, "l-left")
-    # elements = l_element.find_elements(By.CLASS_NAME, "ProductDetail__description")
-    # details = [i.text.replace('：', '') for i in elements]
-    # result.start_time = details[0]
-    # result.end_time = details[1]
-    # result.automatic_extension = details[2]
-    # result.early_termination = details[3]
-
-    # r_element = element.find_element(By.CLASS_NAME, "l-right")
-    # elements = r_element.find_elements(By.CLASS_NAME, "ProductDetail__description")
-    # details = [i.text.replace('：', '') for i in elements]
-    # result.returns = details[0]
-    # result.bidder_appraisal_restriction = details[1]
-    # result.bidder_verification_limit = details[2]
-    # result.highest_bidder = details[3]
-    # result.starting_price = details[4]
-    # result.id = details[5]
-
-    # # seller 
-    # element = driver.find_element(By.CLASS_NAME, "Seller__name").find_element(By.TAG_NAME, "a")
-    # result.seller = element.get_attribute("href")
-
-    # # comprehensive_evaluation
-    # element = driver.find_element(By.CLASS_NAME, "Seller__ratingSum").find_element(By.TAG_NAME, "a")
-    # result.comprehensive_evaluation = element.text
-
-    # # percentage_of_good_reviews
-    # element = driver.find_element(By.CLASS_NAME, "Seller__ratingGood").find_element(By.TAG_NAME, "a")
-    # result.percentage_of_good_reviews = element.text
-
-    # # seller_region
-    # element = driver.find_element(By.CLASS_NAME, "Seller__areaName")
-    # result.percentage_of_good_reviews = element.text
-
     return result
 
 if __name__ == "__main__":
