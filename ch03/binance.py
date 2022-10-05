@@ -1,3 +1,4 @@
+import os
 import time
 import datetime
 from selenium import webdriver
@@ -5,50 +6,42 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
 import pandas as pd
 
+CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
+DATA_DIR = "data"
+SLEEP_TIME = 1
+
 if __name__=="__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        CSV_NAME = "tmp.csv"
-
         base_url = "https://www.binance.com/ja/markets"
-        
         chrome_service = fs.Service(executable_path=CHROMEDRIVER)
         driver = webdriver.Chrome(service=chrome_service)
         driver.get(base_url)
         
-        time.sleep(5)
+        time.sleep(SLEEP_TIME)
         
-        btc_file_name = "btc.csv"
+        if not os.path.exists(DATA_DIR):
+            os.makedirs(DATA_DIR)
+
+        btc_file_name = os.path.join(DATA_DIR, "btc.csv")
         f_btc = open(btc_file_name, "a")
-
-        eth_file_name = "eth.csv"
+        eth_file_name = os.path.join(DATA_DIR, "eth.csv")
         f_eth = open(eth_file_name, "a")
-
-        usdt_file_name = "usdt.csv"
+        usdt_file_name = os.path.join(DATA_DIR, "usdt.csv")
         f_usdt = open(usdt_file_name, "a")
 
-        
-        coin_elements = driver.find_elements(By.CLASS_NAME, "css-vlibs4")
-            
+        price_elements = driver.find_elements(By.CLASS_NAME, "css-ydcgk2")
         while True:
-            btc_price = coin_elements[0].find_element(By.CSS_SELECTOR, "div > div.css-ydcgk2").text
-            eth_price = coin_elements[1].find_element(By.CSS_SELECTOR, "div > div.css-ydcgk2").text
-            usdt_price = coin_elements[2].find_element(By.CSS_SELECTOR, "div > div.css-ydcgk2").text
-            now = datetime.datetime.now().strftime('%Y:%m:%d:%H:%M:%S')
-            
-            print(btc_price)
-            print(eth_price)
-            print(usdt_price)
-            print("="*100)
+            btc_price = price_elements[0].text
+            eth_price = price_elements[1].text
+            usdt_price = price_elements[2].text
 
+            now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             f_btc.write(f"{btc_price.replace(',','')},{now}\n")
             f_eth.write(f"{eth_price.replace(',','')},{now}\n")
             f_usdt.write(f"{usdt_price.replace(',','')},{now}\n")
+            print(now)
 
-            time.sleep(2)
+            time.sleep(SLEEP_TIME)
     
     finally:
         driver.quit()
-
-    df = pd.DataFrame(results, index=False)
-    df.to_csv("tmp.csv")
