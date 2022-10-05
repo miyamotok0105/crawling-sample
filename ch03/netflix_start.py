@@ -11,11 +11,9 @@ CSV_NAME = "netflix_end.csv"
 def get_info(driver):
     results = list()
     day_elements = driver.find_elements(By.CLASS_NAME, "date-cc")
-    print(f"day_elements:{day_elements}")
     for i_day in day_elements:
         date = i_day.find_element(By.CLASS_NAME, "newtoto2").text
         contens_elements = i_day.find_elements(By.CSS_SELECTOR, "div.mark89 > div")
-        print(f"contens_elements:{contens_elements}")
         for i_content in contens_elements:
             content_result = dict()
             content_result["date"] = date
