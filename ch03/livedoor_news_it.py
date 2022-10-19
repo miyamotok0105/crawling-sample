@@ -5,8 +5,16 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
 
-SLEEP_TIME = 10
-FILE_DIR = "livedoor"
+PAGE_NUM = 3
+SLEEP_TIME = 3
+CSV_NAME = "livedoor_it.csv"
+FILE_DIR = "livedoor_it"
+
+def get_article_url(driver):
+    article_list_element = driver.find_element(By.CLASS_NAME, "articleList")
+    a_elements = article_list_element.find_elements(By.TAG_NAME, "a")
+    print([i.get_attribute("href") for i in a_elements])
+    return [i.get_attribute("href") for i in a_elements]
 
 def get_data(driver):
     result = dict()
@@ -31,42 +39,35 @@ def get_data(driver):
                 break
         else:
             break
-
     file_path = os.path.join(FILE_DIR, result["file_name"])
     with open(file_path, "w") as f:
         f.write(article_text)
     return result
-
-def get_news_url(driver):
-    a_elements = driver.find_elements(By.CLASS_NAME, "rewrite_ab")
-    return [i.get_attribute("href") for i in a_elements]
 
 if __name__=="__main__":
     try:
         CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
         chrome_service = fs.Service(executable_path=CHROMEDRIVER)
         driver = webdriver.Chrome(service=chrome_service)
-        
+
         if not os.path.exists(FILE_DIR):
             os.makedirs(FILE_DIR)
 
-        target_url = "https://news.livedoor.com/"
-        driver.get(target_url)
-        time.sleep(SLEEP_TIME)
-
-        article_urls = list()
-
-        urls = get_news_url(driver)
-        article_urls.extend(urls)
-        article_urls = set([i.replace("topics", "article") for i in article_urls])
-
-        results = list()
-        for i_url in article_urls:
-            print(i_url)
+        urls = list()
+        for i_pagenum in range(1, PAGE_NUM+1):
+            url = f"https://news.livedoor.com/article/category/210/?p={i_pagenum}"
+            driver.get(url)
+            time.sleep(SLEEP_TIME)
+            urls.extend(get_article_url(driver))       
+        
+        urls = [i.replace("topics", "article") for i in urls]
+        article_infos = list()
+        for i_url in urls:
             driver.get(i_url)
             time.sleep(SLEEP_TIME)
-            results.append(get_data(driver))
-        pd.DataFrame(results).to_csv(CSV_NAME)
+            article_infos.append(get_data(driver))
+
+        pd.DataFrame(article_infos).to_csv(CSV_NAME)
 
     finally:
         driver.quit()
