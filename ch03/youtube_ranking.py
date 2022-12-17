@@ -1,12 +1,19 @@
+# -*- coding: utf-8 -*-
+
+"""
+Youtuberのランキングのデータを取得する
+"""
+
 import time
 import datetime
 import pandas as pd 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 3
-CSV_NAME = "youtube_ranking.csv"
+CSV_NAME = "output/youtube_ranking.csv"
 
 def update_page(driver, page_num):
     url = f"https://youtube-ranking.userlocal.jp/?page={page_num}"
@@ -30,12 +37,9 @@ def get_info(driver):
 
 if __name__=="__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
-
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         urls = list()
-        for i_page in range(1,11):    
+        for i_page in range(1, 3):    
             update_page(driver, i_page)
             time.sleep(SLEEP_TIME)
             urls.extend(get_urls(driver))

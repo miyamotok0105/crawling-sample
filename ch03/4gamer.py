@@ -1,4 +1,9 @@
-# ライブラリのインポート
+# -*- coding: utf-8 -*-
+
+"""
+ゲーム情報のデータを取得する
+"""
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By

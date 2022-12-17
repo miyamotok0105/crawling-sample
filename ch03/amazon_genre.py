@@ -1,21 +1,26 @@
 # -*- coding: utf-8 -*-
+
+"""
+ジャンル別でAmazonのデータを取得する
+"""
+
+
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 
 SLEEP_TIME = 5
 
 if __name__=="__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        CSV_NAME = "tmp.csv"
+        CSV_NAME = "output/amazon_genre.csv"
 
         base_url = "https://www.amazon.co.jp/gp/bestsellers/musical-instruments/3232345051/ref=zg_bs_nav_musical-instruments_2_2130095051"
         
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         driver.get(base_url)
         
         time.sleep(SLEEP_TIME)

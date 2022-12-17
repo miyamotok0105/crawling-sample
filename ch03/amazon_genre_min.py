@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+
+"""
+ジャンル別でAmazonのデータを取得する（最小版）
+"""
+
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
