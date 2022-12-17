@@ -9,7 +9,8 @@ import pandas as pd
 CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
 CSV_NAME = "tmp.csv"
 SLEEP_TIME = 3
-PAGE_NUM = 10
+
+def 
 
 if __name__=="__main__":
     try:
@@ -31,9 +32,7 @@ if __name__=="__main__":
             item_info["url"] = f"https://www.nikkei.com/article/DGXZQOUA249000U2A820C2000000/{json_data['id']}"
             item_info["title"] = json_data["title"]
             results.append(item_info)
+        pd.DataFrame(results).to_csv(CSV_NAME)
 
     finally:
         driver.quit()
-
-    df = pd.DataFrame(results)
-    df.to_csv(CSV_NAME)

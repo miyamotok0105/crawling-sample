@@ -38,7 +38,7 @@ if __name__ == "__main__":
         chrome_service = fs.Service(executable_path=CHROMEDRIVER)
         driver = webdriver.Chrome(service=chrome_service)
 
-        target_url = "https://www.mbok.jp/_l?q=macbook&open_only=1"
+        target_url = "https://www.mbok.jp/category/categ_80.html?o=&at=all&q=%C8%B8%C0%B2&vt=0&ls%5Fexec=1&p=1"
         driver.get(target_url)
         time.sleep(SLEEP_TIME)
         

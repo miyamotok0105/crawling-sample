@@ -72,6 +72,7 @@ if __name__ == "__main__":
                 test = get_normal_info(driver)
                 print(test)
                 result.append(test)
-        pd.DataFrame(result).to_csv()
+        pd.DataFrame(result).to_csv(CSV_NAME)
+        pd.DataFrame(rnc_result).to_csv(CSV_NAME.replace(".csv", ""))
     finally:
         driver.quit()

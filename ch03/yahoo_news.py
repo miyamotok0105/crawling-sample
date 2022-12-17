@@ -6,14 +6,13 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
 
-SLEEP_TIME = 3
-CSV_NAME = "yahoo_it.csv"
-FILE_DIR = "yahoo_it"
+SLEEP_TIME = 4
+CSV_NAME = "yahoo_news.csv"
+FILE_DIR = "yahoo_news"
 
 def get_item_urls(driver):
-    a_elements = driver.find_elements(By.CLASS_NAME, "newsFeed_item_link")
+    a_elements = driver.find_elements(By.CLASS_NAME, "sc-btzYZH")
     pickup_urls = [i.get_attribute("href") for i in a_elements]
-    results = list()
 
     results = list()
     for i_url in pickup_urls:
@@ -38,19 +37,15 @@ def get_article_info(driver):
                     button_element = driver.find_element(By.CSS_SELECTOR, ".pagination_item.pagination_item-next")
                     if "pagination_item-disabled" in button_element.get_attribute("class"):
                         button_element.click()
-                    else:
-                        break
-                    time.sleep(SLEEP_TIME)
-                else:
-                    break
-        else:
-            break
+                        time.sleep(SLEEP_TIME)
+                    else: break
+                else: break
+        else: break
 
     file_path = os.path.join(FILE_DIR, result["file_name"])
     with open(file_path, "w") as f:
         f.write(content)
     return result
-
 
 def get_byline_info(driver):
     result = dict()
@@ -70,14 +65,17 @@ if __name__ == "__main__":
         chrome_service = fs.Service(executable_path=CHROMEDRIVER)
         driver = webdriver.Chrome(service=chrome_service)
 
-        target_url = "https://news.yahoo.co.jp/topics/it"
+        if not os.path.exists(FILE_DIR):
+            os.makedirs(FILE_DIR)
+
+        target_url = "https://news.yahoo.co.jp/"
         driver.get(target_url)
         time.sleep(SLEEP_TIME)
 
-        urls = get_item_urls(driver)
-
+        article_urls = get_item_urls(driver)
+    
         result = list()
-        for i_url in urls:
+        for i_url in article_urls:
             print(i_url)
             driver.get(i_url)   
             time.sleep(SLEEP_TIME)
@@ -87,6 +85,5 @@ if __name__ == "__main__":
                 result.append(get_byline_info(driver))
     
         pd.DataFrame(result).to_csv(CSV_NAME)
-
     finally:
         driver.quit()

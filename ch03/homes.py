@@ -8,19 +8,10 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.select import Select
 import pandas as pd 
 
-class Suumo_item:
-      name = None
-      price = None
-      floor_plan = None
-      address = None
-      url = None
-
-
 def update_page_num(driver, page_num):
     base_url = "https://www.homes.co.jp/chintai/tokyo/list/?page=2"
     next_url = base_url + f"?page={page_num}"
     driver.get(next_url)
-
 
 def get_item_urls(driver):
     detail_elements = driver.find_elements(By.CLASS_NAME, "detail")
@@ -39,49 +30,23 @@ def is_last_page(driver):
     return not "次" in paging_element.text
 
 def set_option(driver):
-    # 要素の選択
     select_object.select_by_value('value1')
     
 def get_item_info(driver):
-    #mainContents > div:nth-child(8) > div.mt20 > table.mt15.bdGrayT.bdGrayL.bgWhite.pCell10.bdclps.wf
-    # get table tag 
-    # table_element = driver.find_element(By.CLASS_NAME, ".mt15.bdGrayT.bdGrayL.bgWhite.pCell10.bdclps.wf")
-    table_element = driver.find_element(By.CSS_SELECTOR, ".mt15.bdGrayT.bdGrayL.bgWhite.pCell10.bdclps.wf")
+    table_element = driver.find_element(By.CSS_SELECTOR, ".vertical.col4")
     df = pd.read_html(table_element.get_attribute("outerHTML"))[0]
     
-    # 
     first_df = df.iloc[:, :2]
-    # first_df.iloc[:,0] = [i.replace("  ヒント", "") for i in first_df.iloc[:,0].tolist()]
     keys = [i.replace("  ヒント", "") for i in first_df.iloc[:,0].tolist()]
     vals = first_df.iloc[:,1].tolist()
-    ({i_key:i_val for i_key, i_val in zip(keys, vals)})
+    print({i_key:i_val for i_key, i_val in zip(keys, vals)})
+    return {i_key:i_val for i_key, i_val in zip(keys, vals)}
+
     second_df = df.iloc[:, 2:]
-
-    # print(first_df)
-    # print(second_df)
-    # 物件名
-    # 価格
-    # 間取り
-    # 住所
-    # URL
-
 
 def scraping():
     try:
-        # logger = getLogger(__name__)
-        # formatter = '[%(levelname)s] %(asctime)s %(filename)s.%(funcName)s.l%(lineno)d: %(message)s'
-        # logging.basicConfig(level=logging.INFO, format=formatter)
-        # fh = logging.FileHandler('spam.log') # logファイルの
-        # logger.addHandler(fh)3
-
-        # 運用後に変更が考えられる変数は外部ファイルで操作したい
-        # logger.info("start crawling")
-        # config_ini = configparser.ConfigParser()
-        # config_ini.read('config.ini', encoding='utf-8')
-
-        # v4では以下の書き方になるらしい
         chrome_options = Options()
-        # chrome_options.add_argument('--headless')
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
         driver = webdriver.Chrome("/home/nanashino/Downloads/chromedriver",options=chrome_options)
@@ -133,9 +98,8 @@ def scraping():
         return item_infos
     
     finally:
-      pass
-        # driver.quit()
-        # logger.info('end crawring')       
+        driver.save_screenshot('screenie.png')
+        driver.quit()
 
 
 if __name__=="__main__":
