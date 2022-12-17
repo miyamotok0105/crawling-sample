@@ -37,5 +37,6 @@ if __name__=="__main__":
     finally:
         driver.quit()
 
-    df = pd.DataFrame(results, index=False)
+    print(results)    
+    df = pd.DataFrame(results)
     df.to_csv("tmp.csv")

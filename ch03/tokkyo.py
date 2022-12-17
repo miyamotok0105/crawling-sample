@@ -61,9 +61,7 @@ if __name__ == "__main__":
         driver = webdriver.Chrome(service=chrome_service)
 
         driver.get("https://www.j-platpat.inpit.go.jp/s0100")
-
         time.sleep(SLEEP_TIME)
-        driver.save_screenshot("tmp_ss.png")
 
         driver.find_element(By.ID, "s01_srchCondtn_txtSimpleSearch").send_keys(SEARCH_WORD)
         driver.find_element(By.ID, "s01_srchBtn_btnSearch").click()
@@ -107,7 +105,15 @@ if __name__ == "__main__":
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
 
-        pd.DataFrame.to_csv(CSV_NAME)
+        pd.DataFrame().to_csv(CSV_NAME)
 
     finally:
         driver.quit()
+
+
+
+
+"/html/body/div[1]/div[1]/div[5]/div[4]/div"
+
+[i.get_attribute("href") for i in xpath. "h2 > a")]
+/html/body/div[1]/div[1]/div[5]/div[4]/div[8]/div/div[2]/div/div/h2/a

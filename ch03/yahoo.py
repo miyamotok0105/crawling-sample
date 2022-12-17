@@ -1,30 +1,11 @@
-import sys
+import os
 import time
-from webbrowser import Chrome
-import requests
 import datetime
-from tqdm import tqdm
-import logging
-from logging import config, getLogger
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
-import configparser
 
-class Yahoo_serch_option():
-    def __init__(self):
-        pass
-
-class Yahoo_item_info():
-    id = None
-    datetime = None
-    title = None
-    price = None
-    description = None
-    stock = None
-    review = None
-    image_urls = None
 
 def update_page_num(driver, page_num):
     page_option = f"?page={page_num}"
@@ -78,12 +59,6 @@ if __name__ == "__main__":
         target_url = "https://store.shopping.yahoo.co.jp/ryouhin-boueki/a5c8a5c3a5.html"
         driver.get(target_url)
 
-        logger = getLogger(__name__)
-        formatter = '[%(levelname)s] %(asctime)s %(filename)s.%(funcName)s.l%(lineno)d: %(message)s'
-        logging.basicConfig(level=logging.INFO, format=formatter)
-
-        logger.info("start scrape item urls.")
-        time.sleep(10)
         page_num=0
         item_urls = list()
         while True:

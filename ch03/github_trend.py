@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
 
 SLEEP_TIME = 3
+CSV_NAME = "github_ranking.csv"
 
 if __name__=="__main__":
     try:
@@ -30,7 +31,6 @@ if __name__=="__main__":
             row_data["todays_star"] = i_box.find_element(By.CSS_SELECTOR, ".d-inline-block.float-sm-right").text.replace("stars today", "")
             result.append(row_data)
 
-        df= pd.DataFrame(result)
-        print(df)
+        pd.DataFrame(result).to_csv("CSV_NAME")
     finally:
         driver.quit()

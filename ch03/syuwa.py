@@ -7,7 +7,7 @@ SLEEP_TIME = 5
 CSV_NAME = "syuwa.csv"
 
 def update_page_num(driver, page_num):
-    base_url = "https://www.shuwasystem.co.jp/search/index.php?search_genre=13280"
+    base_url = "https://www.shuwasystem.co.jp/search/index.php?search_genre=13273&c=1"
     page_option = f"&page={page_num}"
     next_url = base_url + page_option
     driver.get(next_url)
@@ -24,7 +24,6 @@ def get_item_info(driver):
     result["price"] = driver.find_element(By.XPATH, '//*[@id="main"]/div[3]/div[2]/table/tbody/tr[6]/td').text
     result["author"] = driver.find_element(By.CSS_SELECTOR, "#main > div.detail > div.right > table > tbody > tr:nth-child(1) > td > a").text
     result["describe"] = driver.find_element(By.ID, "bookSample").text
-    print(result)
     return result
 
 def is_last_page(driver):

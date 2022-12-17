@@ -4,6 +4,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
 import pandas as pd
 
+SLEEP_TIME = 5
+
 if __name__=="__main__":
     try:
         CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
@@ -15,11 +17,11 @@ if __name__=="__main__":
         driver = webdriver.Chrome(service=chrome_service)
         driver.get(base_url)
         
-        time.sleep(5)
+        time.sleep(SLEEP_TIME)
 
         # scroll
         while len(driver.find_elements(By.ID, "gridItemRoot")) < 50:
-            time.sleep(5)
+            time.sleep(SLEEP_TIME)
             driver.execute_script("window.scrollBy(0, 3000);")
 
         # レビューごとの要素

@@ -12,12 +12,6 @@ import configparser
 
 class XX_scraper:
     def __init__(self, config_path):
-        self.logger = getLogger(__name__)
-        formatter = '[%(levelname)s] %(asctime)s %(filename)s.%(funcName)s.l%(lineno)d: %(message)s'
-        logging.basicConfig(level=logging.INFO, format=formatter)
-        fh = logging.FileHandler(logfile_path) # logファイルの
-        self.logger.addHandler(fh)
-        
         # read config file 
         config_ini = configparser.ConfigParser()
         config_ini.read('config.ini', encoding='utf-8')
@@ -32,6 +26,11 @@ class XX_scraper:
         chrome_service = fs.Service(executable_path=CHROMEDRIVER)
         self.driver = webdriver.Chrome(service=chrome_service)
         # logもしっかり書こう
+        self.logger = getLogger(__name__)
+        formatter = '[%(levelname)s] %(asctime)s %(filename)s.%(funcName)s.l%(lineno)d: %(message)s'
+        logging.basicConfig(level=logging.INFO, format=formatter)
+        fh = logging.FileHandler(logfile_path) # logファイルの
+        self.logger.addHandler(fh)
     
     def update_page_num(self, page_num):
         """
