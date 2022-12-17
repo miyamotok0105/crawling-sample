@@ -1,3 +1,4 @@
+
 import os
 import time
 import datetime
@@ -5,6 +6,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
 import pandas as pd
+
+# バイナンスの情報を取得する
 
 CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
 DATA_DIR = "data"
