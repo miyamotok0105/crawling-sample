@@ -17,12 +17,34 @@ class Suumo_item:
 
 
 def update_page_num(driver, page_num):
+    """
+    検索結果のページを次のページへ更新する。
+
+    Parameters
+    --------------------------------------
+    driver:
+      商品一覧ページを表示した状態のchrome driver
+      
+    pagenum:int
+      更新後のページ数
+    """
     base_url = "https://www.homes.co.jp/chintai/tokyo/list/?page=2"
     next_url = base_url + f"?page={page_num}"
     driver.get(next_url)
 
 
 def get_item_urls(driver):
+    """
+    検索結果のペ1ージから商品のURLのみを取得する
+    
+    Parameters
+    --------------------------------------
+    driver:
+      商品一覧ページを表示した状態のchrome driver
+    Returns
+    --------------------------------------
+    
+    """
     detail_elements = driver.find_elements(By.CLASS_NAME, "detail")
     hrefs = list()
     for i in detail_elements:
@@ -39,10 +61,31 @@ def is_last_page(driver):
     return not "次" in paging_element.text
 
 def set_option(driver):
+    """
+    オプションを設定するためにドライバをいじる関数
+    
+    Parameters
+    --------------------------------------
+    driver:
+      商品一覧ページを表示した状態のchrome driver
+    """
     # 要素の選択
     select_object.select_by_value('value1')
     
 def get_item_info(driver):
+    """
+    商品ページから必要なデータを取得し、
+    結果を専用のデータ型に書き込み返す。
+    Parameters
+    ---------------------------------
+    driver:
+      商品紹介ページを表示した状態のchrome driver
+      
+    Returns
+    ---------------------------------
+    result: 
+      データを纏めたオブジェクト
+    """
     #mainContents > div:nth-child(8) > div.mt20 > table.mt15.bdGrayT.bdGrayL.bgWhite.pCell10.bdclps.wf
     # get table tag 
     # table_element = driver.find_element(By.CLASS_NAME, ".mt15.bdGrayT.bdGrayL.bgWhite.pCell10.bdclps.wf")
@@ -67,6 +110,15 @@ def get_item_info(driver):
 
 
 def scraping():
+    """
+    上記コードを組み合わせて、クローリング&スクレーピングを行う
+
+    Returns 
+    ----------------------------------------
+    item_infos:
+        商品データを纏めたデータ型のリスト
+    """
+
     try:
         # logger = getLogger(__name__)
         # formatter = '[%(levelname)s] %(asctime)s %(filename)s.%(funcName)s.l%(lineno)d: %(message)s'
