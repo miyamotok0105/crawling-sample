@@ -1,12 +1,17 @@
+# -*- coding: utf-8 -*-
+
+"""
+ライブドアニュースを取得
+"""
 import os
 import time
 import pandas as pd 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
-
+from webdriver_manager.chrome import ChromeDriverManager
 SLEEP_TIME = 10
-FILE_DIR = "livedoor"
+FILE_DIR = "output"
 
 def get_data(driver):
     result = dict()
@@ -15,7 +20,7 @@ def get_data(driver):
     result["title"] = driver.find_element(By.CLASS_NAME, "articleTtl").text
     result["date"] = driver.find_element(By.CLASS_NAME, "articleDate").text
     result["vender"] = driver.find_element(By.CLASS_NAME, "articleVender").text
-    result["file_name"] = f"{result['id']}.txt"
+    result["file_name"] = f"livedoor_{result['id']}.txt"
     
     article_text = str()
     while True:
@@ -43,10 +48,7 @@ def get_news_url(driver):
 
 if __name__=="__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
-        
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         if not os.path.exists(FILE_DIR):
             os.makedirs(FILE_DIR)
 

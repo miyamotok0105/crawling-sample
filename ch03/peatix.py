@@ -1,12 +1,18 @@
+# -*- coding: utf-8 -*-
+
+"""
+Peatixイベントの情報を取得する
+"""
 import time
 import requests
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 4
-CSV_NAME = "peatix.csv"
+CSV_NAME = "output/peatix.csv"
 
 def page_update(driver):
     driver.find_element(By.CLASS_NAME, "next").click()
@@ -47,12 +53,8 @@ def get_info(driver):
     
 if __name__ == "__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
-
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         driver.get("https://peatix.com/search?q=python&country=JP&l.text=%E3%81%99%E3%81%B9%E3%81%A6%E3%81%AE%E5%A0%B4%E6%89%80&p=1&size=20&v=3.4&tag_ids=&dr=&p=2")
-
         urls = list()
         while True:
             time.sleep(SLEEP_TIME)
@@ -62,7 +64,7 @@ if __name__ == "__main__":
             page_update(driver)
 
         result=list()
-        for i_url in urls: # 特許ごと
+        for i_url in urls:
             driver.get(i_url)
             time.sleep(SLEEP_TIME)
             result.append(get_info(driver))

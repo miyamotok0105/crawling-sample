@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+
+"""
+東京商工リサーチのデータを倒産情報取得する
+"""
 import os
 import time
 import datetime
@@ -5,9 +10,10 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 3
-DATA_DIR = "tokyosyoko"
+DATA_DIR = "output"
 CSV_NAME = "tokyosyoko.csv"
 
 def get_monthly_urls(driver):
@@ -47,13 +53,9 @@ def get_company_info(driver):
 
 if __name__ == '__main__':
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
-
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         if not os.path.exists(DATA_DIR):
             os.makedirs(DATA_DIR)
-
         url = 'https://www.tsr-net.co.jp/news/process/index.html'
         driver.get(url)
         time.sleep(SLEEP_TIME)

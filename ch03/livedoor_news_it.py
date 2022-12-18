@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+
+"""
+ライブドアニュース(IT)のデータを取得する
+"""
 import os
 import time
 import pandas as pd 

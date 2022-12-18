@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+
+"""
+landixから東京都の城南エリア物件情報取得
+"""
 import re
 import time
 import datetime
@@ -6,6 +11,7 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 3
 
@@ -86,13 +92,9 @@ def get_item_info(driver):
     
 if __name__ == "__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
-
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         target_url = "https://portal-landix.jp/recommend/"
         driver.get(target_url)
-
         urls = get_item_urls(driver)
 
         result = list()

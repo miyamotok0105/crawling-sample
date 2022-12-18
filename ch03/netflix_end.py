@@ -1,12 +1,18 @@
+# -*- coding: utf-8 -*-
+
+"""
+Netflix配信終了予定の情報を取得する
+"""
 import time
 import requests
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 2
-CSV_NAME = "netflix_end.csv"
+CSV_NAME = "output/netflix_end.csv"
 
 def get_info(day_elements):
     result = list()
@@ -31,10 +37,7 @@ def get_info(day_elements):
 
 if __name__ == "__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
-
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         target_url = "https://www.net-frx.com/p/netflix-expiring.html"
         driver.get(target_url)
         time.sleep(SLEEP_TIME)

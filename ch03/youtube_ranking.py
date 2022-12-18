@@ -3,7 +3,6 @@
 """
 Youtuberのランキングのデータを取得する
 """
-
 import time
 import datetime
 import pandas as pd 

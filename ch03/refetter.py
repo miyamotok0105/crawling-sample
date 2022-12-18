@@ -1,13 +1,19 @@
+# -*- coding: utf-8 -*-
+
+"""
+インスタグラマーのランキングのデータを取得する
+"""
 import os
 import time
 import datetime
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
-import pandas as pd
+from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 5
-CSV_NAME = "insta_ranking.csv"
+CSV_NAME = "output/insta_ranking.csv"
 
 def update_page_num(driver, page_num):
     url = f"https://insta.refetter.com/ranking/?p={page_num}"
@@ -45,24 +51,18 @@ def get_user_info(driver):
 
 if __name__ == "__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
-
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         user_urls = list()
-        for i_page_num in range(1,11):
+        for i_page_num in range(1, 2):
             update_page_num(driver, i_page_num)
             time.sleep(SLEEP_TIME)
             user_urls.extend(get_urls(driver))
-
         print("="*100)
         result = list()
         for i_url in user_urls:
             driver.get(i_url)
             time.sleep(SLEEP_TIME)
             result.append(get_user_info(driver))
-
         pd.DataFrame.to_csv(CSV_NAME)
-
     finally:
         driver.quit()
