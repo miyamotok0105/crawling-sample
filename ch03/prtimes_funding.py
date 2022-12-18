@@ -1,23 +1,27 @@
+# -*- coding: utf-8 -*-
+
+"""
+PRTIMESのから資金調達データを取得する
+"""
 import os
 import time
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
-import pandas as pd
+from webdriver_manager.chrome import ChromeDriverManager
 
-ARTICLE_DATA_DIR = "prtimes_fundraising"
-CSV_NAME = "tmp.csv"
+ARTICLE_DATA_DIR = "output"
+CSV_NAME = "prtimes_funding.csv"
 SLEEP_TIME = 3
 PAGE_NUM = 10
 
 if __name__=="__main__":
     try:
-        driver = webdriver.Chrome()
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         base_url = f"https://prtimes.jp/topics/keywords/%E8%B3%87%E9%87%91%E8%AA%BF%E9%81%94"
         driver.get(base_url)
         time.sleep(SLEEP_TIME)
-
-
         if not os.path.exists(ARTICLE_DATA_DIR):
             os.makedirs(ARTICLE_DATA_DIR)
         

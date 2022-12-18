@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 
 """
-prtimesのデータを取得する
+PRTIMESのデータを取得する
 """
 import os
 import time
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
 from webdriver_manager.chrome import ChromeDriverManager
-import pandas as pd
 
-CSV_NAME = "prtimes.csv"
 ARTICLE_DATA_DIR = "output"
+CSV_NAME = "prtimes.csv"
 
 if __name__=="__main__":
     try:

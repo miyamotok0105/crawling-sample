@@ -1,16 +1,22 @@
+# -*- coding: utf-8 -*-
+
+"""
+特許情報を取得する
+"""
 import os
 import time
 import requests
 import pandas as pd
+from PyPDF2 import PdfFileMerger
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
-from PyPDF2 import PdfFileMerger
+from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 6
-CSV_NAME = "insta_ranking.csv"
+CSV_NAME = "tokkyo.csv"
 SEARCH_WORD = "栽培　トマト"
-DATA_DIR = "tokkyo"
+DATA_DIR = "output"
 
 def scroll_all(driver):
     pre_html = None
@@ -56,13 +62,9 @@ def binnd_pdf(dir, name):
     
 if __name__ == "__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
-
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         driver.get("https://www.j-platpat.inpit.go.jp/s0100")
         time.sleep(SLEEP_TIME)
-
         driver.find_element(By.ID, "s01_srchCondtn_txtSimpleSearch").send_keys(SEARCH_WORD)
         driver.find_element(By.ID, "s01_srchBtn_btnSearch").click()
         time.sleep(SLEEP_TIME)
@@ -111,9 +113,7 @@ if __name__ == "__main__":
         driver.quit()
 
 
+# "/html/body/div[1]/div[1]/div[5]/div[4]/div"
+# [i.get_attribute("href") for i in xpath. "h2 > a")]
+# /html/body/div[1]/div[1]/div[5]/div[4]/div[8]/div/div[2]/div/div/h2/a
 
-
-"/html/body/div[1]/div[1]/div[5]/div[4]/div"
-
-[i.get_attribute("href") for i in xpath. "h2 > a")]
-/html/body/div[1]/div[1]/div[5]/div[4]/div[8]/div/div[2]/div/div/h2/a

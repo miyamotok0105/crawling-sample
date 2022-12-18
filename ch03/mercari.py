@@ -1,9 +1,15 @@
+# -*- coding: utf-8 -*-
+
+"""
+メルカリのデータを取得する
+"""
 import time
 import datetime
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs 
+from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 3
     
@@ -31,9 +37,7 @@ def get_item_info(driver):
     
 if __name__=="__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         target_url = "https://jp.mercari.com/search?keyword=novation&t1_category_id=1328&status=on_sale&category_id=79"
         driver.get(target_url)   
         time.sleep(5)
