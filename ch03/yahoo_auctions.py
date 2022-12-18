@@ -1,12 +1,18 @@
+# -*- coding: utf-8 -*-
+
+"""
+yahooオークションのデータを取得する
+"""
 import time
 import datetime
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 4
-CSV_NAME = "yahoo_auction.csv"
+CSV_NAME = "output/yahoo_auction.csv"
 
 def update_page_num(driver, page_num, show_num=50):
     b_num = page_num*show_num + 1
@@ -34,9 +40,7 @@ def get_item_info(driver):
 
 if __name__ == "__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         target_url = "https://auctions.yahoo.co.jp/search/search?va=novation&s1=popular"
 
         page_num = 0

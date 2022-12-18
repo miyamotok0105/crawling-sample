@@ -1,25 +1,25 @@
+# -*- coding: utf-8 -*-
 
+"""
+バイナンスのデータを取得する
+"""
 import os
 import time
 import datetime
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 
-# バイナンスの情報を取得する
-
-CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-DATA_DIR = "data"
+DATA_DIR = "output"
 SLEEP_TIME = 1
 
 if __name__=="__main__":
     try:
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         base_url = "https://www.binance.com/ja/markets"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
         driver.get(base_url)
-        
         time.sleep(SLEEP_TIME)
         
         if not os.path.exists(DATA_DIR):

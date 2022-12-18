@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+
+"""
+yahooショッピングのデータを取得する
+"""
 import os
 import time
 import datetime
@@ -5,7 +10,7 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
-
+from webdriver_manager.chrome import ChromeDriverManager
 
 def update_page_num(driver, page_num):
     page_option = f"?page={page_num}"
@@ -52,9 +57,7 @@ def get_item_info(driver):
 
 if __name__ == "__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         # In The City -> トップス
         target_url = "https://store.shopping.yahoo.co.jp/ryouhin-boueki/a5c8a5c3a5.html"
         driver.get(target_url)

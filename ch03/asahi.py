@@ -1,12 +1,18 @@
+# -*- coding: utf-8 -*-
+
+"""
+朝日新聞のデータを取得する
+"""
 import os
 import time
 import pandas as pd 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 3
-CSV_NAME = "asahi.csv"
+CSV_NAME = "output/asahi.csv"
 
 def get_news_url(driver, css_selector):
     first_headline = driver.find_element(By.CSS_SELECTOR, css_selector)
@@ -27,10 +33,7 @@ def get_article_info(driver):
 
 if __name__=="__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
-        
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         target_url = "https://www.asahi.com/"
         driver.get(target_url)
         time.sleep(SLEEP_TIME)

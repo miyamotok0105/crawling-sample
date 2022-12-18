@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
 """
-ジャンル別でAmazonのデータを取得する
+ジャンル別でAmazon商品情報を取得する
 """
-
-
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -17,12 +15,9 @@ SLEEP_TIME = 5
 if __name__=="__main__":
     try:
         CSV_NAME = "output/amazon_genre.csv"
-
-        base_url = "https://www.amazon.co.jp/gp/bestsellers/musical-instruments/3232345051/ref=zg_bs_nav_musical-instruments_2_2130095051"
-        
         driver = webdriver.Chrome(ChromeDriverManager().install())
+        base_url = "https://www.amazon.co.jp/gp/bestsellers/musical-instruments/3232345051/ref=zg_bs_nav_musical-instruments_2_2130095051"
         driver.get(base_url)
-        
         time.sleep(SLEEP_TIME)
 
         # scroll
@@ -49,4 +44,4 @@ if __name__=="__main__":
         driver.quit()
 
     df = pd.DataFrame(results)
-    df.to_csv("tmp.csv")
+    df.to_csv(CSV_NAME)

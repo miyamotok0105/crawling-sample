@@ -1,4 +1,10 @@
+# -*- coding: utf-8 -*-
+
+"""
+Home’sから物件情報取得
+"""
 import time
+import pandas as pd 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
@@ -6,7 +12,7 @@ import configparser
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options 
 from selenium.webdriver.support.select import Select
-import pandas as pd 
+from webdriver_manager.chrome import ChromeDriverManager
 
 def update_page_num(driver, page_num):
     base_url = "https://www.homes.co.jp/chintai/tokyo/list/?page=2"
@@ -49,7 +55,8 @@ def scraping():
         chrome_options = Options()
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
-        driver = webdriver.Chrome("/home/nanashino/Downloads/chromedriver",options=chrome_options)
+        driver = webdriver.Chrome(ChromeDriverManager().install(), options=chrome_options)
+        # driver = webdriver.Chrome("/home/nanashino/Downloads/chromedriver", options=chrome_options)
         # driver.get('https://www.google.nl/')
 
         target_url = "https://www.homes.co.jp/chintai/tokyo/list/?cond%5Broseneki%5D%5B43704833%5D=43704833&cond%5Bmonthmoneyroomh%5D=0&cond%5Bhousearea%5D=0&cond%5Bhouseageh%5D=0&cond%5Bwalkminutesh%5D=0&bukken_attr%5Bcategory%5D=chintai&bukken_attr%5Bpref%5D=13" # 検索後の画面が出てくるURL
@@ -68,9 +75,6 @@ def scraping():
         floor_element = driver.find_element(By.ID,'cond_madori_13')
         if not floor_element.is_selected():
               floor_element.click()
-
-
-
         # 収集対象のURLを取得する
         # logger.info("start scrape item urls.")
         page_num=0

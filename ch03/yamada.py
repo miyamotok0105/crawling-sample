@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+
+"""
+yamadaモールのデータを取得する
+"""
 import os
 import time
 import datetime
@@ -8,7 +13,7 @@ from selenium.webdriver.chrome import service as fs
 
 ITEM_SHOW_NUM = 20
 SLEEP_TIME = 2
-CSV_NAME = "ymall.csv"
+CSV_NAME = "output/ymall.csv"
 
 def get_total_page_num(driver):
     result_elemet = driver.find_element(By.CLASS_NAME, "result") 
@@ -46,9 +51,7 @@ def get_item_info(driver):
 
 if __name__=="__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         
         update_page(driver, 1)
         time.sleep(SLEEP_TIME)

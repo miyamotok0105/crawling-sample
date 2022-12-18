@@ -1,18 +1,20 @@
+# -*- coding: utf-8 -*-
+
+"""
+Amazon欲しいものリスト情報を取得する
+"""
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 
 if __name__=="__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        CSV_NAME = "tmp.csv"
-
+        CSV_NAME = "output/amazon_wish.csv"
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         base_url = "https://www.amazon.co.jp/hz/wishlist/ls/7UNVFD2BUDK5?ref_=wl_share"
-        
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
         driver.get(base_url)
         
         time.sleep(5)
@@ -39,4 +41,4 @@ if __name__=="__main__":
 
     print(results)    
     df = pd.DataFrame(results)
-    df.to_csv("tmp.csv")
+    df.to_csv(CSV_NAME)

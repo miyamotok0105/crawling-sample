@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-ジャンル別でAmazonのデータを取得する（最小版）
+ジャンル別でAmazon商品情報を取得する（最小版）
 """
 
 import time

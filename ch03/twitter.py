@@ -1,18 +1,21 @@
+# -*- coding: utf-8 -*-
+
+"""
+Twitterの特定のユーザーの投稿一覧を取得する
+"""
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
+
+CSV_NAME = "output/twitter.csv"
 
 if __name__=="__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        CSV_NAME = "tmp.csv"
-
-        base_url = "https://twitter.com/NanashinoSeito"
-        
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
+        base_url = "https://twitter.com/NanashinoSeito"        
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         driver.get(base_url)
         
         time.sleep(10)

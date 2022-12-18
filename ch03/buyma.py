@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+
+"""
+BUYMAのデータを取得する
+"""
 import time
 import datetime
 import pandas as pd 

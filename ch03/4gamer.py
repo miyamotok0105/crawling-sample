@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-ゲーム情報のデータを取得する
+ゲーム情報を取得する
 """
 
 from selenium import webdriver

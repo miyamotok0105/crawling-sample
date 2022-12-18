@@ -1,13 +1,17 @@
+# -*- coding: utf-8 -*-
+
+"""
+全国法人リストから会社情報を取得
+"""
 import time
 import datetime
 import pandas as pd 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
-
-CSV_NAME = "hojin.csv"
+from webdriver_manager.chrome import ChromeDriverManager
+CSV_NAME = "output/hojin.csv"
 SLEEP_TIME = 3
-
 
 def update_page_num(driver, page_num):
     base_url = "https://houjin.jp/search?keyword=%E3%82%BD%E3%83%8B%E3%83%83%E3%82%AF&pref_id="
@@ -31,7 +35,7 @@ def get_item_info(driver):
 
 def scraping():
     try:
-        driver = webdriver.Chrome("/home/nanashino/Downloads/chromedriver")
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         target_url = "https://houjin.jp/search?keyword=%E3%82%BD%E3%83%8B%E3%83%83%E3%82%AF&pref_id="
         driver.get(target_url)
         time.sleep(SLEEP_TIME)

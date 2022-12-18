@@ -1,20 +1,21 @@
+# -*- coding: utf-8 -*-
+
+"""
+Amazon商品ランキング情報(IT)を取得する
+"""
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 
 if __name__=="__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        CSV_NAME = "tmp.csv"
-
+        CSV_NAME = "output/amazon_ranking.csv"
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         base_url = "https://www.amazon.co.jp/gp/new-releases/books/466298/ref=zg_bsnr_unv_books_2_492350_1"
-        
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
-        driver.get(base_url)
-        
+        driver.get(base_url)        
         time.sleep(5)
 
         # scroll
@@ -41,4 +42,4 @@ if __name__=="__main__":
         driver.quit()
 
     df = pd.DataFrame(results)
-    df.to_csv("tmp.csv")
+    df.to_csv(CSV_NAME)

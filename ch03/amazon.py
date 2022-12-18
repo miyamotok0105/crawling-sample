@@ -1,11 +1,16 @@
+# -*- coding: utf-8 -*-
+
+"""
+Amazon商品情報を取得する
+"""
 import time
 import datetime
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
-
-CSV_NAME = "amazon.csv"
+from webdriver_manager.chrome import ChromeDriverManager
+CSV_NAME = "output/amazon.csv"
 SLEEP_TIME = 3
 
 def get_item_urls(driver):
@@ -53,7 +58,7 @@ def get_item_info(driver):
     
 if __name__=="__main__":
     try:
-        driver = webdriver.Chrome("/usr/lib/chromium-browser/chromedriver")
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         target_url = "https://www.amazon.co.jp/s?k=novation"
         driver.get(target_url)   
         time.sleep(SLEEP_TIME)

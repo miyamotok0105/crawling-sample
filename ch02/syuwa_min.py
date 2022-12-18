@@ -9,11 +9,20 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+# クロムドライバーの自動インストールをすると手間が減ります
 from webdriver_manager.chrome import ChromeDriverManager
 
 if __name__=="__main__":
     try:
+        # 手動ダウンロードした場合
+        # クロムドライバーの指定
+        # CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
+        # chrome_service = fs.Service(executable_path=CHROMEDRIVER)
+        # driver = webdriver.Chrome(service=chrome_service)
+        
+        # ChromeDriverManagerを使用した場合
         driver = webdriver.Chrome(ChromeDriverManager().install())
+
         target_url = "https://www.shuwasystem.co.jp/book/9784798068596.html"
         driver.get(target_url)
 

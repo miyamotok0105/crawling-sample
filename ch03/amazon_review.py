@@ -1,20 +1,21 @@
+# -*- coding: utf-8 -*-
+
+"""
+Amazon商品レビュー情報を取得する
+"""
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 
 if __name__=="__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        CSV_NAME = "tmp.csv"
-
+        CSV_NAME = "output/amazon_review.csv"        
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         base_url = "https://www.amazon.co.jp/Novation-NOVSYNTH02UKEU-%E3%82%B7%E3%83%B3%E3%82%BB%E3%82%B5%E3%82%A4%E3%82%B6%E3%83%BC-MiniNova/product-reviews/B0096MEKZ4/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews"
-        
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
-        driver.get(base_url)
-        
+        driver.get(base_url)        
         time.sleep(5)
         
         # レビューごとの要素
@@ -36,4 +37,4 @@ if __name__=="__main__":
         driver.quit()
 
     df = pd.DataFrame(results)
-    df.to_csv("tmp.csv")
+    df.to_csv(CSV_NAME)

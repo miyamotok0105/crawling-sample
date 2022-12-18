@@ -1,10 +1,16 @@
+# -*- coding: utf-8 -*-
+
+"""
+物件情報CHINTAIのデータを取得する
+"""
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 
-CSV_NAME = "chintai.csv"
+CSV_NAME = "output/chintai.csv"
 
 def update_page_num(driver, page_num):
     pager_element = driver.find_element(By.CLASS_NAME, "list_pager")
@@ -33,11 +39,8 @@ def is_last_page(driver):
     return not "次" in paging_text
 
 def scraping():
-    base_url = "https://www.chintai.net/list/?o=10&pageNoDisp=20%E4%BB%B6&o=10&rt=51&prefkey=tokyo&ue=000004864&urlType=dynamic&cf=0&ct=60&k=1&m=0&m=2&jk=0&jl=0&sf=0&st=0&j=&h=99&b=1&b=2&b=3&jks="
-    
-    CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-    chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-    driver = webdriver.Chrome(service=chrome_service)
+    driver = webdriver.Chrome(ChromeDriverManager().install())
+    base_url = "https://www.chintai.net/list/?o=10&pageNoDisp=20%E4%BB%B6&o=10&rt=51&prefkey=tokyo&ue=000004864&urlType=dynamic&cf=0&ct=60&k=1&m=0&m=2&jk=0&jl=0&sf=0&st=0&j=&h=99&b=1&b=2&b=3&jks="    
     driver.get(base_url)   
     time.sleep(5)
 
@@ -53,7 +56,6 @@ def scraping():
         else:
             page_num+=1
             update_page_num(driver, page_num)
-    
     # 商品ごとに収集する
     item_infos = list()
     for i_url in item_urls:

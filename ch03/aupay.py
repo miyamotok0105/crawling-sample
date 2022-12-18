@@ -1,10 +1,16 @@
+# -*- coding: utf-8 -*-
+
+"""
+AU Payマーケットのデータを取得する
+"""
 import time
 import datetime
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
 
-CSV_NAME  = "aupay_market.csv"
+CSV_NAME  = "output/aupay_market.csv"
 SLEEP_TIME = 2
 
 def get_item_urls(driver,page_num):
@@ -31,7 +37,7 @@ def get_item_info(driver):
 
 if __name__ == "__main__":
     try:
-        driver = webdriver.Chrome()
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         target_url = "https://wowma.jp/itemlist?e_scope=O&at=FP&non_gr=ex&spe_id=c_act_sc03&e=tsrc_topa_m&ipp=40&keyword=%83%7D%83%8A%83I%83X%83g%83%89%83C%83J%81%5B%83Y&clk=1"
         driver.get(target_url)
         time.sleep(SLEEP_TIME)
@@ -44,7 +50,7 @@ if __name__ == "__main__":
         
         urls = list()
         for i_page_num in range(1, page_num+1):
-            next_url = target_url + f"&page={i_page_num}'
+            next_url = target_url + f"&page={i_page_num}"
             driver.get(next_url)
             time.sleep(SLEEP_TIME)
             urls.extend(get_item_urls(driver,page_num))

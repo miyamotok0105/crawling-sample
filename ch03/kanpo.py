@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+
+"""
+官報から決算書を取得する
+"""
 import os
 import time
 import datetime
@@ -6,10 +11,11 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs 
+from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 5
-CSV_NAME = "tmp.csv"
-DOWNLOAD_DIR =  "pdf_data"
+CSV_NAME = "kanpo.csv"
+DOWNLOAD_DIR =  "output"
 
 def get_vol_url(driver):
     result = list()
@@ -55,14 +61,10 @@ def download_pdf(dir, url):
 
 if __name__=="__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
-    
+        driver = webdriver.Chrome(ChromeDriverManager().install())    
         target_url = "https://kanpou.npb.go.jp/"
         driver.get(target_url)
         time.sleep(SLEEP_TIME)
-    
         day_urls = get_vol_url(driver)
      
         if not os.path.exists(DOWNLOAD_DIR):

@@ -9,9 +9,11 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+# クロムドライバーの自動インストールをすると手間が減ります
+from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 5
-CSV_NAME = "syuwa.csv"
+CSV_NAME = "output/syuwa.csv"
 
 def update_page_num(driver, page_num):
     base_url = "https://www.shuwasystem.co.jp/search/index.php?search_genre=13273&c=1"
@@ -40,9 +42,14 @@ def is_last_page(driver):
 
 if __name__=="__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
+        # 手動ダウンロードした場合
+        # クロムドライバーの指定
+        # CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
+        # chrome_service = fs.Service(executable_path=CHROMEDRIVER)
+        # driver = webdriver.Chrome(service=chrome_service)
+
+        # ChromeDriverManagerを使用した場合
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         
         page_num = 1
         item_urls = list()

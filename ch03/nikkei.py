@@ -1,21 +1,22 @@
+# -*- coding: utf-8 -*-
+
+"""
+日経新聞のデータを取得する
+"""
 import os
 import time
 import json 
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
-import pandas as pd
-
-CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-CSV_NAME = "tmp.csv"
+from webdriver_manager.chrome import ChromeDriverManager
+CSV_NAME = "output/nikkei.csv"
 SLEEP_TIME = 3
-
-def 
 
 if __name__=="__main__":
     try:
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         base_url = f"https://www.nikkei.com/"
         driver.get(base_url)
         time.sleep(SLEEP_TIME)

@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+
+"""
+yahooニュース(IT)のデータを取得する
+"""
 import os
 import time
 import datetime
@@ -8,7 +13,7 @@ from selenium.webdriver.chrome import service as fs
 
 SLEEP_TIME = 3
 CSV_NAME = "yahoo_it.csv"
-FILE_DIR = "yahoo_it"
+FILE_DIR = "output"
 
 def get_item_urls(driver):
     a_elements = driver.find_elements(By.CLASS_NAME, "newsFeed_item_link")
@@ -66,14 +71,11 @@ def get_byline_info(driver):
 
 if __name__ == "__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
+        driver = webdriver.Chrome(ChromeDriverManager().install())
 
         target_url = "https://news.yahoo.co.jp/topics/it"
         driver.get(target_url)
         time.sleep(SLEEP_TIME)
-
         urls = get_item_urls(driver)
 
         result = list()

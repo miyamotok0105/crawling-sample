@@ -1,3 +1,11 @@
+# -*- coding: utf-8 -*-
+
+"""
+削除？？？
+
+AU Payマーケットのデータを取得する
+"""
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import datetime
@@ -30,10 +38,8 @@ def get_item_info(driver,url):
     # 商品名
     table = driver.find_element(By.CLASS_NAME, 'pb20')
     item_name_list.append(table.find_element(By.CLASS_NAME, 'name').text)
-    
     # ID
     item_id_list.append(driver.current_url)
-    
     # 価格
     time.sleep(1)
     item_price_list.append(driver.find_element(By.ID, 'js-baseItemPrice').text)
