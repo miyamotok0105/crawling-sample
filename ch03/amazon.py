@@ -67,6 +67,7 @@ if __name__=="__main__":
         item_urls = list()
         while True:
             urls = get_item_urls(driver)
+            urls = urls[:2] # テストで動かすときは時間がかかるので件数を絞り込み
             if len(urls) == 0:
                 break
             time.sleep(SLEEP_TIME)
