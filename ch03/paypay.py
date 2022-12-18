@@ -1,11 +1,17 @@
+# -*- coding: utf-8 -*-
+
+"""
+Paypayモールのデータを取得する
+"""
+import time
+import datetime
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-import datetime
-import time
-import pandas as pd
+from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 3
-CSV_NAME = "paypay.csv"
+CSV_NAME = "output/paypay.csv"
 
 def update_page_num(driver):
     while True:
@@ -33,7 +39,7 @@ def get_item_info(driver):
 
 if __name__=="__main__":
     try:
-        driver = webdriver.Chrome()
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         url = 'https://paypaymall.yahoo.co.jp/search?p=%E3%83%9E%E3%83%AA%E3%82%AA%E3%82%AB%E3%83%BC%E3%83%888&cid=&brandid=&kspec=&catopn=&b=1'
         driver.get(url)
         time.sleep(SLEEP_TIME)

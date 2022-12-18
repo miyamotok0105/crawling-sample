@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+
+"""
+M&A案件一覧を取得する（事業を売る）
+"""
 import time
 import datetime
 import pandas as pd

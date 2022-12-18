@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+
+"""
+リクナビNEXTのから「Django」で検索したデータを取得する
+"""
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By

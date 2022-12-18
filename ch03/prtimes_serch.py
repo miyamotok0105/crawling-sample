@@ -1,24 +1,27 @@
+# -*- coding: utf-8 -*-
+
+"""
+PRTIMESのから「調達」で検索したデータを取得する
+"""
 import os
 import time
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
-import pandas as pd
+from webdriver_manager.chrome import ChromeDriverManager
 
-CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-CSV_NAME = "tmp.csv"
-ARTICLE_DATA_DIR = "prtimes_serch"
+CSV_NAME = "prtimes_serch.csv"
+ARTICLE_DATA_DIR = "output"
 SLEEP_TIME = 3
 PAGE_NUM = 10
 
 if __name__=="__main__":
     try:
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         base_url = f"https://prtimes.jp/main/action.php?run=html&page=searchkey&search_word=%E8%AA%BF%E9%81%94"
         driver.get(base_url)
         time.sleep(SLEEP_TIME)
-
         if not os.path.exists(ARTICLE_DATA_DIR):
             os.makedirs(ARTICLE_DATA_DIR)        
 
