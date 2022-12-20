@@ -33,12 +33,10 @@ def get_store_info(driver, url):
     map_url = url + "dtlmap/"
     driver.get(map_url)
     time.sleep(SLEEP_TIME)
-    table_elements = driver.find_elements(By.CSS_SELECTOR, ".c-table.c-table--form.rstinfo-table__table")
-    outer_table = [i.get_attribute("outerHTML") for i in table_elements]    
-    df = pd.read_html(outer_table[0])[0]
-    columns = df[0].tolist()
-    values = df[1].tolist()
-    return {k:v for k,v in zip(columns, values)}
+    table_elements = driver.find_element(By.CSS_SELECTOR, ".c-table.c-table--form.rstinfo-table__table")
+    th_texts = [i.text for i in table_elements.find_elements(By.TAG_NAME, "th")]
+    td_texts = [i.text for i in table_elements.find_elements(By.TAG_NAME, "td")]
+    return {k:v for k,v in zip(th_texts, td_texts)}
 
 if __name__=="__main__":
     try:
