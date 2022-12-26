@@ -10,28 +10,33 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 4
 CSV_NAME = "yahoo_news.csv"
 FILE_DIR = "output"
 
 def get_item_urls(driver):
-    a_elements = driver.find_elements(By.CLASS_NAME, "sc-btzYZH")
-    pickup_urls = [i.get_attribute("href") for i in a_elements]
+    contents_element = driver.find_element(By.ID, "contentsWrap")
+    ul_element = contents_element.find_element(By.TAG_NAME, "ul")
+    urls = [i.get_attribute("href") for i in ul_element.find_elements(By.TAG_NAME, "a")]
 
     results = list()
-    for i_url in pickup_urls:
+    for i_url in urls:
         driver.get(i_url)
         time.sleep(SLEEP_TIME)
-        title_element = driver.find_element(By.CLASS_NAME, "sc-hMapFE")
-        results.append(title_element.get_attribute("href"))
-    return results
+        article_element = driver.find_element(By.ID, "uamods-pickup")
+        a_element = article_element.find_element(By.TAG_NAME ,"a")
+        results.append(a_element.get_attribute("href"))
+
+    return ["/".join(i.split("/")[:5])  for i in results]
 
 def get_article_info(driver):
     result = dict()
     result["id"] = driver.current_url.split("/")[-1]
-    result["title"] = driver.find_element(By.CSS_SELECTOR, "article > header >h1").text
-    result["post_time"] = driver.find_element(By.CSS_SELECTOR, "article > header >div > div > div >p > time").text
+    article_element = driver.find_element(By.TAG_NAME, "article")
+    result["title"] = article_element.find_element(By.TAG_NAME, "h1").text
+    result["post_time"] = article_element.find_element(By.TAG_NAME, "time").text
     result["file_name"] = f"{result['id']}.txt"
 
     content = str()
@@ -55,8 +60,9 @@ def get_article_info(driver):
 def get_byline_info(driver):
     result = dict()
     result["id"] = driver.current_url.split("/")[-1]
-    result["title"] = driver.find_element(By.CSS_SELECTOR, "article > div > header > h1").text
-    result["post_time"] = driver.find_element(By.CSS_SELECTOR, "article > div > header > div > div  > div > time").text
+    article_element = driver.find_element(By.TAG_NAME, "article")
+    result["title"] = article_element.find_element(By.TAG_NAME, "h1").text
+    result["post_time"] = article_element.find_element(By.TAG_NAME, "time").text
     result["file_name"] = f"{result['id']}.txt"
 
     file_path = os.path.join(FILE_DIR, result["file_name"])

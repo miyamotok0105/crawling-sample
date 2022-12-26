@@ -21,14 +21,13 @@ def get_item_urls(driver):
     item_urls = list(set(hrefs))
     return item_urls
 
-def get_item_info(driver):
-    result = dict()
-    result["url"] = driver.current_url
-    result["id"] = driver.current_url.split("/")[-2]
-
-    result["datetime"] = datetime.datetime.now().strftime('%y/%m/%d %H:%M:%S')
-    
+def get_item_info(driver):    
     try:
+        result = dict()
+        result["site"] = "Amazon"
+        result["url"] = driver.current_url
+        result["id"] = driver.current_url.split("/")[-2]
+
         title_element = driver.find_element(By.ID, 'title')
         result["title"] = title_element.text
     
@@ -40,19 +39,8 @@ def get_item_info(driver):
     
         description_element = driver.find_element(By.ID, "feature-bullets")
         result["description"] = description_element.text
-        try:
-            postage_sections = driver.find_element(By.ID, "deliveryBlockMessage")
-            result["postage"] = postage_sections.text
-        except:
-            result["postage"] = None
-    
-        result["image_urls"] = list()
-        images_section= driver.find_element(By.ID, "imageBlock")
-        image_tags = images_section.find_elements(By.TAG_NAME, "img")
-        srcs = list(set([i.get_attribute("src") for i in image_tags]))
-        result["image_urls"].extend(srcs)
     except:
-        print("詳細な情報を取得できませんでした:{driver.current_url}")
+        print(f"詳細な情報を取得できませんでした:{driver.current_url}")
     return result
 
     
@@ -67,7 +55,6 @@ if __name__=="__main__":
         item_urls = list()
         while True:
             urls = get_item_urls(driver)
-            urls = urls[:2] # テストで動かすときは時間がかかるので件数を絞り込み
             if len(urls) == 0:
                 break
             time.sleep(SLEEP_TIME)
@@ -82,8 +69,15 @@ if __name__=="__main__":
             item_info = get_item_info(driver)
             print(item_info)
             results.append(get_item_info(driver))
+    except Exception as e:
+        print(f"Error: {e}")
     finally:
         driver.save_screenshot('last_screan.png')
         driver.quit()
 
-    pd.DataFrame(results).to_csv(CSV_NAME)
+    pd.DataFrame(results).to_csv(CSV_NAME, index=False)
+
+import re 
+
+s = "19,800円"
+result = re.sub(r"\D", "", s)

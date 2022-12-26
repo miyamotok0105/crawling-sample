@@ -25,9 +25,9 @@ def get_article_info(driver):
     html_name = driver.current_url.split("/")[-1]
     result["id"] = html_name.split("?")[0].replace(".html", "")
     result["url"] = driver.current_url
-    result["title"] = driver.find_element(By.CSS_SELECTOR, "main > div > h1")
+    result["title"] = driver.find_element(By.CSS_SELECTOR, "main > div > h1").text
     result["article_text"] = driver.find_element(By.CLASS_NAME, "nfyQp").text
-    result["writer"] = driver.find_element(By.CSS_SELECTOR, "main > div > div > span")
+    result["writer"] = driver.find_element(By.CSS_SELECTOR, "main > div > div > span").text
 
     return result
 
@@ -47,7 +47,7 @@ if __name__=="__main__":
             driver.get(i_url)
             time.sleep(SLEEP_TIME)
             result.append(get_article_info(driver))
-        pd.DataFrame(result).to_csv(CSV_NAME)
+        pd.DataFrame(result).to_csv(CSV_NAME, index=False)
 
     finally:
         driver.quit()

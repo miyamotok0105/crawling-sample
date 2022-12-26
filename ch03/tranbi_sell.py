@@ -12,7 +12,7 @@ from selenium.webdriver.chrome import service as fs
 
 SLEEP_TIME = 3
 GET_PAGE_NUM = 3 # Noneなら全件
-CSV_NAME = "tmp.csv"
+CSV_NAME = "./output/tranbi_sell.csv"
 
 def update_page_num(driver, page_num):
     base_url = "https://www.tranbi.com/sell/list/"
@@ -81,9 +81,10 @@ if __name__=="__main__":
         for i_page_num in range(1, page_num+1):
             update_page_num(driver, i_page_num)
             time.sleep(SLEEP_TIME)
-            result.extend(get_info(driver))
+            item_info, _ = get_info(driver)
+            result.extend(item_info)
     
-        pd.DataFrame(result).to_csv(CSV_NAME)
+        pd.DataFrame(result).to_csv(CSV_NAME, index=False)
         
     finally:
         driver.quit()

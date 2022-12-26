@@ -70,7 +70,7 @@ if __name__=="__main__":
             item_infos.append(get_item_info(driver))
       
         df = pd.DataFrame(item_infos)
-        df.to_csv(CSV_NAME)
+        df.to_csv(CSV_NAME, index=False)
       
     finally:
         driver.quit()

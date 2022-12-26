@@ -11,6 +11,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 
 CSV_NAME = "output/chintai.csv"
+SLEEP_TIME = 5
 
 def update_page_num(driver, page_num):
     pager_element = driver.find_element(By.CLASS_NAME, "list_pager")
@@ -30,24 +31,22 @@ def get_item_info(driver):
     result["title"] = driver.find_element(By.TAG_NAME, "h2").text.replace("の賃貸物件詳細", "")
     result["price"] = driver.find_element(By.CLASS_NAME, "price").text
     result["access"]  = driver.find_element(By.CLASS_NAME, "mod_necessaryTime").text
-    print(result)
     return result
 
 def is_last_page(driver):
     paging_text = driver.find_element(By.CLASS_NAME, "list_pager").text
-    print(f"text: {paging_text}")
     return not "次" in paging_text
 
-def scraping():
+if __name__=="__main__":
     driver = webdriver.Chrome(ChromeDriverManager().install())
     base_url = "https://www.chintai.net/list/?o=10&pageNoDisp=20%E4%BB%B6&o=10&rt=51&prefkey=tokyo&ue=000004864&urlType=dynamic&cf=0&ct=60&k=1&m=0&m=2&jk=0&jl=0&sf=0&st=0&j=&h=99&b=1&b=2&b=3&jks="    
     driver.get(base_url)   
-    time.sleep(5)
+    time.sleep(SLEEP_TIME)
 
     page_num = 1
     item_urls = list()
     while True:
-        time.sleep(5) 
+        time.sleep(SLEEP_TIME) 
         urls = get_item_urls(driver)
         print(urls)
         item_urls.extend(urls)
@@ -56,14 +55,10 @@ def scraping():
         else:
             page_num+=1
             update_page_num(driver, page_num)
-    # 商品ごとに収集する
     item_infos = list()
     for i_url in item_urls:
         driver.get(i_url)   
-        time.sleep(5)
+        time.sleep(SLEEP_TIME)
         item_infos.append(get_item_info(driver))
     
-    pd.DataFrame(item_infos).to_csv(CSV_NAME)
-      
-if __name__=="__main__":
-    scraping()
+    pd.DataFrame(item_infos).to_csv(CSV_NAME, index=False)

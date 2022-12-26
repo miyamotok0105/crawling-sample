@@ -9,7 +9,6 @@ import requests
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome import service as fs
 from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 3
@@ -36,7 +35,7 @@ def get_company_info(driver):
 
     if not os.path.exists(DATA_DIR):
         os.makedirs(DATA_DIR)
-    result["file_name"] = f'{result["id"]}.text'
+    result["file_name"] = f'{result["id"]}.txt'
     file_dir = os.path.join(DATA_DIR, result["file_name"])
     with open(file_dir, "w")as f:
         f.write(driver.find_element(By.CLASS_NAME, 'articleTxt').text)
@@ -56,6 +55,6 @@ if __name__ == '__main__':
             time.sleep(SLEEP_TIME)
             result.append(get_company_info(driver))
 
-        pd.DataFrame(result).to_csv(CSV_NAME)
+        pd.DataFrame(result).to_csv(CSV_NAME, index=False)
     finally:
         driver.quit()

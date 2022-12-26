@@ -10,6 +10,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
 from webdriver_manager.chrome import ChromeDriverManager
+
 CSV_NAME = "output/hojin.csv"
 SLEEP_TIME = 3
 
@@ -29,11 +30,9 @@ def get_item_info(driver):
     keys = corp_info_df.iloc[:,0].tolist()
     vals = corp_info_df.iloc[:,1].tolist()
     corp_info_dict = {i_key:i_val for i_key, i_val in zip(keys, vals)}
-
-    print(corp_info_dict)
     return corp_info_dict
 
-def scraping():
+if __name__=="__main__":
     try:
         driver = webdriver.Chrome(ChromeDriverManager().install())
         target_url = "https://houjin.jp/search?keyword=%E3%82%BD%E3%83%8B%E3%83%83%E3%82%AF&pref_id="
@@ -45,15 +44,13 @@ def scraping():
         while True:
             time.sleep(SLEEP_TIME) 
             urls = get_item_urls(driver)
-            if len(urls)==0: # 最終ページ
-                print("="*100)
+            if len(urls)==0: 
                 break
             else:
                 item_urls.extend(urls)
                 page_num+=1
                 update_page_num(driver, page_num)
   
-        # 商品ごとに収集する
         item_infos = list()
         for i_url in item_urls:
             print(i_url)
@@ -61,10 +58,7 @@ def scraping():
             driver.get(i_url)   
             item_infos.append(get_item_info(driver))
         
-        pd.DataFrame(item_infos).to_csv(CSV_NAME)  
+        pd.DataFrame(item_infos).to_csv(CSV_NAME, index=False)  
     
     finally:
         driver.quit()
-
-if __name__=="__main__":
-  scraping()

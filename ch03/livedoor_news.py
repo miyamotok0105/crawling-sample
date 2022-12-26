@@ -12,7 +12,7 @@ from selenium.webdriver.chrome import service as fs
 from webdriver_manager.chrome import ChromeDriverManager
 SLEEP_TIME = 10
 FILE_DIR = "output"
-
+CSV_NAME = "./output/livedoor.csv"
 def get_data(driver):
     result = dict()
     result["url"] = driver.current_url
@@ -68,7 +68,7 @@ if __name__=="__main__":
             driver.get(i_url)
             time.sleep(SLEEP_TIME)
             results.append(get_data(driver))
-        pd.DataFrame(results).to_csv(CSV_NAME)
+        pd.DataFrame(results).to_csv(CSV_NAME, index=False)
 
     finally:
         driver.quit()

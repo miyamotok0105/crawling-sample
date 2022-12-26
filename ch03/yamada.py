@@ -10,6 +10,7 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
+from webdriver_manager.chrome import ChromeDriverManager
 
 ITEM_SHOW_NUM = 20
 SLEEP_TIME = 2
@@ -70,7 +71,7 @@ if __name__=="__main__":
             results.append(get_item_info(driver))
         
         # CSVへ出力
-        pd.DataFrame(results).to_csv(CSV_NAME)
+        pd.DataFrame(results).to_csv(CSV_NAME, index=False)
 
     finally:
         driver.quit()
