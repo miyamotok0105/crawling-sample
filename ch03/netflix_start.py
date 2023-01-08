@@ -12,7 +12,7 @@ from selenium.webdriver.chrome import service as fs
 from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 10
-CSV_NAME = "output/netflix_end.csv"
+CSV_NAME = "output/netflix_start.csv"
 
 def get_info(driver):
     results = list()
@@ -34,14 +34,15 @@ def get_info(driver):
 if __name__ == "__main__":
     try:
         driver = webdriver.Chrome(ChromeDriverManager().install())
-        target_url = "https://www.net-frx.com/p/netflix-coming-soon.html"
+        #target_url = "https://www.net-frx.com/p/netflix-coming-soon.html"
+        target_url = "https://www.net-frx.com/p/netflix-expiring.html"
+
         driver.get(target_url)
         time.sleep(SLEEP_TIME)
 
         result = get_info(driver)
 
-        pd.DataFrame(result).to_csv(CSV_NAME)
-        print(pd.DataFrame(result))
+        pd.DataFrame(result).to_csv(CSV_NAME,index=False)
     
     finally:
         driver.quit()

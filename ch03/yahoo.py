@@ -12,77 +12,61 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
 from webdriver_manager.chrome import ChromeDriverManager
 
-def update_page_num(driver, page_num):
-    page_option = f"?page={page_num}"
-    driver.get(target_url + page_option)
+SLEEP_TIME = 3
+CSV_NAME = "./output/yahoo.csv"
+
+def display_all_item(driver):
+    start_html = driver.page_source
+    while True:
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(SLEEP_TIME)
+        if driver.page_source == start_html:
+            break
+        else:
+            start_html = driver.page_source
 
 def get_item_urls(driver):
-    tr_elements = driver.find_elements(By.CLASS_NAME, "elNameLink")
-    item_urls = [i.get_attribute("href") for i in tr_elements]
-    return item_urls
+    li_elements = driver.find_elements(By.CLASS_NAME, "LoopList__item")
+    a_elements = [i.find_element(By.TAG_NAME, "a") for i in li_elements]
+    return [i.get_attribute("href") for i in a_elements]
 
 def get_item_info(driver):
-    result = Yahoo_item_info()
-
+    result = dict()
+    result["site"] = "yahoo"
+    result["url"] = driver.current_url
     # id
-    result.id = driver.current_url.split("/")[-1]
-    # datetime
-    now = datetime.datetime.now()
-    result.datetime = now.strftime('%y/%m/%d %H:%M:%S')
+    result["id"] = driver.current_url.split("/")[-1]
     # title
-    element = driver.find_element(By.CLASS_NAME, "mdItemName")
-    title_element = element.find_element(By.CLASS_NAME, "elName")
-    result.title = title_element.text
+    md_element = driver.find_element(By.CLASS_NAME, "mdItemName")
+    result["title"]  = md_element.find_element(By.CLASS_NAME, "elName").text
     # price
     price_number_element = driver.find_element(By.CLASS_NAME, "elPriceNumber")
-    price_unit_element = driver.find_element(By.CLASS_NAME, "elPriceUnit")
-    result.price = str(price_number_element.text + price_unit_element.text)
+    result["price"] = price_number_element.text
     # description
     description_element = driver.find_element(By.CLASS_NAME, "mdItemDescription")
-    result.description = description_element.text
-    # stock
-    element_table = driver.find_element(By.CLASS_NAME, "elTableInner")
-    html = element_table.get_attribute('outerHTML')
-    result.stock = pd.read_html(html)
-    # images 
-    image_elements= driver.find_elements(By.CLASS_NAME, "elPanelImage")
-    result.image_urls = list(set([i.get_attribute("src") for i in image_elements]))
-    
-    # review
-    if len(driver.find_elements(By.CLASS_NAME, "elReviewValue")) > 0:
-        review_element = driver.find_element(By.CLASS_NAME, "elReviewValue")
-        result.review = review_element.text
+    result["description"] = description_element.text
     
     return result
 
 if __name__ == "__main__":
     try:
         driver = webdriver.Chrome(ChromeDriverManager().install())
-        # In The City -> トップス
-        target_url = "https://store.shopping.yahoo.co.jp/ryouhin-boueki/a5c8a5c3a5.html"
+        target_url = "https://shopping.yahoo.co.jp/search?p=novation+mininova"
         driver.get(target_url)
 
-        page_num=0
-        item_urls = list()
-        while True:
-            time.sleep(5)
-            urls = get_item_urls(driver)
-            if len(urls) < 1:
-                break
-            else:
-                item_urls.extend(urls)
-                page_num += 1
-                update_page_num(driver, page_num)
-        
+        display_all_item(driver)
+        item_urls = get_item_urls(driver)
+
         item_infos = list()
-        logger.info("start scrape item info.")
-        for i_url in tqdm(item_urls):
+        for i_url in item_urls:
+            print(i_url)
             driver.get(i_url)   
             time.sleep(5)
             item_infos.append(get_item_info(driver))
 
+        pd.DataFrame(item_infos).to_csv(CSV_NAME, index=False)
+
     except Exception as e :
-        logger.error(e)
+        print(e)
     finally:
         driver.quit()
-        logger.info('end crawring')
