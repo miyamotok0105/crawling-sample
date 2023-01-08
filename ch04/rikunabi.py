@@ -4,14 +4,15 @@
 リクナビNEXTのから「Django」で検索したデータを取得する
 """
 import time
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome import service as fs
-import pandas as pd
+from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 3
 SEARCH_WORD = "Django"
-CSV_NAME = "rikunabi.csv"
+CSV_NAME = "output/rikunabi.csv"
 
 def update_page_num(driver):
     ul_element = driver.find_element(By.CSS_SELECTOR, ".rnn-pagination.rnn-textRight")
@@ -39,9 +40,7 @@ def get_rcn_info(driver):
 
 if __name__ == "__main__":
     try:
-        CHROMEDRIVER = "/usr/lib/chromium-browser/chromedriver"
-        chrome_service = fs.Service(executable_path=CHROMEDRIVER)
-        driver = webdriver.Chrome(service=chrome_service)
+        driver = webdriver.Chrome(ChromeDriverManager().install())
         driver.get("https://next.rikunabi.com/rnc/docs/cp_s00700.jsp?leadtc=srch_submitbtn")
         time.sleep(SLEEP_TIME)
         

@@ -3,13 +3,13 @@
 """
 ゲーム情報を取得する
 """
-
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
 import datetime
 import pandas as pd
 from tqdm import tqdm
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 
 # 分単位で掲載されることがあるので、実際のサイトと取得できるものが異なる場合がある
 
@@ -29,12 +29,13 @@ url_list = list()
 def main():
     option = Options()
     option.add_argument('--headless')
-    driver = webdriver.Chrome(options=option)
+    driver = webdriver.Chrome(ChromeDriverManager().install(), options=option)
     get_article_urls(driver)
+
     for url in tqdm(article_url):
         option = Options()
         option.add_argument('--headless')
-        driver = webdriver.Chrome(options=option)
+        driver = webdriver.Chrome(ChromeDriverManager().install(), options=option)
         get_article_info(driver, url)
         
     # DataFrame型を作成
@@ -47,16 +48,19 @@ def main():
     })
 
     # CSVへ出力
-    df.to_csv('4gamer_result.csv', encoding='utf_8_sig')
+    df.to_csv('output/4gamer.csv', encoding='utf_8_sig')
 
 def get_article_urls(driver):
     url = 'https://www.4gamer.net/'
     driver.get(url)
     
-    for num in tqdm(range(1,5)):
+    for num in tqdm(range(1, 2)):
         driver.implicitly_wait(10)
         select_day = driver.find_element(By.ID, f'NEWS_SELECT_DAY_{num}')
         articles = select_day.find_elements(By.XPATH, 'div')
+        # データの量を減らす
+        articles = articles[:2]
+
         for article in articles:
             v2_article_tags = article.find_elements(By.CLASS_NAME, 'V2_article_tag')
             for v2_article_tag in v2_article_tags:
@@ -87,7 +91,7 @@ def get_article_info(driver, url):
         
         # 記事
         num = list(filter(None, driver.current_url.split('/')))[-1]
-        f = open(f'./txt_dir/{num}.txt', 'w')
+        f = open(f'./output/4gamer/{num}.txt', 'w')
         f.write(container.find_element(By.CLASS_NAME, 'maintxt').text)
         f.close()
         desc_list.append(f'{num}.txt')

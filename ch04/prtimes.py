@@ -12,7 +12,8 @@ from selenium.webdriver.chrome import service as fs
 from webdriver_manager.chrome import ChromeDriverManager
 
 ARTICLE_DATA_DIR = "output"
-CSV_NAME = "prtimes.csv"
+CSV_NAME = "output/prtimes.csv"
+
 
 if __name__=="__main__":
     try:
@@ -51,4 +52,5 @@ if __name__=="__main__":
         driver.quit()
 
     df = pd.DataFrame(results)
-    df.to_csv("tmp.csv")
+    df.to_csv(CSV_NAME)
+    

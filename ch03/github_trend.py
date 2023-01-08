@@ -33,6 +33,8 @@ if __name__=="__main__":
             row_data["fork"] = i_box.find_elements(By.CSS_SELECTOR, ".Link--muted.d-inline-block.mr-3")[1].text
             row_data["todays_star"] = i_box.find_element(By.CSS_SELECTOR, ".d-inline-block.float-sm-right").text.replace("stars today", "")
             result.append(row_data)
+        
+        print(result)
 
         pd.DataFrame(result).to_csv(CSV_NAME, index=False)
     finally:
