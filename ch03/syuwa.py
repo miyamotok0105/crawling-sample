@@ -62,6 +62,8 @@ if __name__=="__main__":
             if is_last_page(driver): 
                 break
             page_num += 1
+        # データの量を減らす
+        item_urls = item_urls[:2]
 
         item_infos = list()
         for i_url in item_urls:

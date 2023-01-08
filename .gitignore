@@ -5,8 +5,10 @@
 .DS_Store
 */.DS_Store
 
+
 *.png
 *.csv
+*.txt
 
 # -*- mode: gitignore; -*-
 *~
@@ -67,7 +69,8 @@ flycheck_*.el
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
