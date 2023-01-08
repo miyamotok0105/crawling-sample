@@ -48,15 +48,22 @@ if __name__=="__main__":
         time.sleep(SLEEP_TIME)
 
         page_num = get_pagenum(driver)
+        # データの量を減らす
+        page_num = 1
 
         store_urls = list()
         for i in range(page_num):
             urls = get_store_url(driver)
+            # データの量を減らす
+            urls = urls[:2]
+
             store_urls.extend(urls)
-            print(urls)
             get_next(driver)
             time.sleep(SLEEP_TIME)
 
+        # データの量を減らす
+        store_urls = store_urls[:2]
+        
         results = list()
         for i_url in store_urls:
             store_info = get_store_info(driver, i_url)
@@ -64,5 +71,6 @@ if __name__=="__main__":
     finally:
         driver.quit()
 
+    print(results)
     df = pd.DataFrame(results)
     df.to_csv(CSV_NAME, index=False)

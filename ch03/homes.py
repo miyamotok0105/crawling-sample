@@ -14,6 +14,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.select import Select
 from webdriver_manager.chrome import ChromeDriverManager
 
+CSV_NAME = "output/homes.csv"
+
 def update_page_num(driver, page_num):
     base_url = "https://www.homes.co.jp/chintai/tokyo/list/?page=2"
     next_url = base_url + f"?page={page_num}"
@@ -62,7 +64,7 @@ def scraping():
         target_url = "https://www.homes.co.jp/chintai/tokyo/list/?cond%5Broseneki%5D%5B43704833%5D=43704833&cond%5Bmonthmoneyroomh%5D=0&cond%5Bhousearea%5D=0&cond%5Bhouseageh%5D=0&cond%5Bwalkminutesh%5D=0&bukken_attr%5Bcategory%5D=chintai&bukken_attr%5Bpref%5D=13" # 検索後の画面が出てくるURL
         driver.get(target_url)   
 
-        time.sleep(15)
+        time.sleep(5)
 
         # ページ設定
         # 賃料
@@ -70,14 +72,14 @@ def scraping():
         price_select_object = Select(price_element)
         price_select_object.select_by_value('6.0')
 
-        time.sleep(13)
+        time.sleep(5)
         # 間取り
         floor_element = driver.find_element(By.ID,'cond_madori_13')
         if not floor_element.is_selected():
               floor_element.click()
         # 収集対象のURLを取得する
         # logger.info("start scrape item urls.")
-        page_num=0
+        page_num = 0
         item_urls = list()
         while True:   # ページ数がわかるならforがいい。tqdm使えるし。
             time.sleep(5) 
@@ -92,6 +94,9 @@ def scraping():
 
         # 商品ごとに収集する
         item_infos = list()
+        # データの量を減らす
+        item_urls = item_urls[:5]
+
         # logger.info("start scrape item info.")
         for i_url in item_urls:
             print(i_url)
@@ -99,11 +104,16 @@ def scraping():
             driver.get(i_url)   
             item_infos.append(get_item_info(driver))
         
-        return item_infos
+        # return item_infos
     
     finally:
-        driver.save_screenshot('screenie.png')
+        # driver.save_screenshot('screenie.png')
         driver.quit()
+
+    print(item_infos)
+    df = pd.DataFrame(item_infos)
+    df.to_csv(CSV_NAME, index=False)
+
 
 
 if __name__=="__main__":
