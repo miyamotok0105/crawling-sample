@@ -13,6 +13,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 SLEEP_TIME = 10
 FILE_DIR = "output"
 CSV_NAME = "./output/livedoor.csv"
+
 def get_data(driver):
     result = dict()
     result["url"] = driver.current_url
@@ -59,6 +60,8 @@ if __name__=="__main__":
         article_urls = list()
 
         urls = get_news_url(driver)
+        # データの量を減らす
+        urls = urls[:4]
         article_urls.extend(urls)
         article_urls = set([i.replace("topics", "article") for i in article_urls])
 

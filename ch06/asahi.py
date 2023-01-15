@@ -27,6 +27,7 @@ def get_article_info(driver):
     result["url"] = driver.current_url
     result["title"] = driver.find_element(By.CSS_SELECTOR, "main > div > h1").text
     result["article_text"] = driver.find_element(By.CLASS_NAME, "nfyQp").text
+    
     result["writer"] = driver.find_element(By.CSS_SELECTOR, "main > div > div > span").text
 
     return result
@@ -41,6 +42,8 @@ if __name__=="__main__":
         news_urls = list()
         news_urls.extend(get_news_url(driver, ".l-section.p-topNews"))
         news_urls.extend(get_news_url(driver, ".p-topNews2.p-topNews2__list.p-topNews__list"))
+        # データの量を減らす
+        news_urls = news_urls[:6]
 
         result = list()
         for i_url in news_urls:

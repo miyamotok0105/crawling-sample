@@ -13,7 +13,7 @@ from selenium.webdriver.chrome import service as fs
 from webdriver_manager.chrome import ChromeDriverManager
 
 SLEEP_TIME = 4
-CSV_NAME = "yahoo_news.csv"
+CSV_NAME = "./output/yahoo_news.csv"
 FILE_DIR = "output"
 
 def get_item_urls(driver):
@@ -80,6 +80,8 @@ if __name__ == "__main__":
         driver.get(target_url)
         time.sleep(SLEEP_TIME)
         article_urls = get_item_urls(driver)
+        # データの量を減らす
+        article_urls = article_urls[:4]
     
         result = list()
         for i_url in article_urls:
